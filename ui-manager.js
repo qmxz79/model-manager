@@ -349,6 +349,10 @@ class ModelManagerUI {
                         <input type="text" id="providerName" placeholder="例如：openai, anthropic, custom">
                     </div>
                     <div class="form-group">
+                        <label>Base URL：</label>
+                        <input type="text" id="baseUrl" placeholder="例如：https://api.openai.com/v1">
+                    </div>
+                    <div class="form-group">
                         <label>模型ID：</label>
                         <input type="text" id="modelId" placeholder="例如：gpt-4o, claude-opus-4">
                     </div>
@@ -444,6 +448,7 @@ class ModelManagerUI {
         // 添加模型
         function addModel() {
             const providerName = document.getElementById('providerName').value.trim();
+            const baseUrl = document.getElementById('baseUrl').value.trim();
             const modelId = document.getElementById('modelId').value.trim();
             const modelName = document.getElementById('modelName').value.trim();
             const apiType = document.getElementById('apiType').value;
@@ -455,6 +460,7 @@ class ModelManagerUI {
             
             const modelData = {
                 provider: providerName,
+                baseUrl: baseUrl,
                 model: {
                     id: modelId,
                     name: modelName,
@@ -728,11 +734,16 @@ class ModelManagerUI {
         // 获取或创建供应商
         if (!config.models.providers[providerName]) {
             config.models.providers[providerName] = {
-                baseUrl: 'https://api.example.com/v1',
+                baseUrl: modelData.baseUrl || 'https://api.example.com/v1',
                 apiKey: '${' + providerName.toUpperCase() + '_API_KEY}',
                 api: modelData.api || 'openai-completions',
                 models: []
             };
+        } else {
+            // 如果供应商已存在，更新 baseUrl（如果提供了）
+            if (modelData.baseUrl) {
+                config.models.providers[providerName].baseUrl = modelData.baseUrl;
+            }
         }
         
         // 添加模型
