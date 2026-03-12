@@ -1,0 +1,10 @@
+{
+  "model": "z-ai/glm4.7",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello"
+    }
+  ],
+  "max_tokens": 10
+}
